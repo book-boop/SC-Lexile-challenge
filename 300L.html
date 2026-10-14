@@ -142,6 +142,8 @@
       justify-content: space-between;
       align-items: center;
       text-align: left;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .mode-text h3 {
       font-size: 15px;
@@ -196,7 +198,7 @@
       display: none;
     }
 
-    /* 三階段進度狀態列 (已設置居中) */
+    /* 三階段進度狀態列 (置中排版) */
     .stage-bar {
       display: flex;
       justify-content: center;
@@ -287,22 +289,24 @@
       cursor: pointer;
       font-size: 15px;
       transition: 0.2s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     .match-item.selected { border-color: #ff4081; background: #fff0f5; transform: scale(1.02); }
     .match-item.matched { background: #e8f5e9; border-color: #81c784; color: #2e7d32; cursor: default; }
-      /* 連連看答錯：紅色外框 + 淺紅底色 + 抖動回饋 */
-.match-item.error {
-  border-color: #f44336 !important;
-  background-color: #ffebee !important;
-  color: #c62828 !important;
-  animation: shake 0.4s ease-in-out;
-}
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-6px); }
-  40%, 80% { transform: translateX(6px); }
-}
+    /* 連連看答錯：紅色外框 + 淺紅底色 + 抖動回饋 */
+    .match-item.error {
+      border-color: #f44336 !important;
+      background-color: #ffebee !important;
+      color: #c62828 !important;
+      animation: shake 0.4s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
 
     /* 對對碰 (Memory Cards) */
     .memory-grid {
@@ -331,6 +335,7 @@
       color: transparent;
       border: 3px solid transparent;
       text-align: center;
+      -webkit-tap-highlight-color: transparent;
     }
     .memory-card.flipped {
       background: #ffffff;
@@ -370,21 +375,17 @@
       text-align: left;
       cursor: pointer;
       transition: background 0.2s, border-color 0.2s;
-  outline: none; /* 移除點擊後的外框殘留 */
-  -webkit-tap-highlight-color: transparent; /* 移除手機預設點擊反灰/反光高亮 */
-}
-
-/* 僅在「支援滑鼠懸停」的桌機設備啟用 hover 效果，防止手機端殘留選中邊框 */
-@media (hover: hover) and (pointer: fine) {
-  .option-btn:hover {
-    background: #fff5f8;
-    border-color: #ff4081;
-  }
-}
-
-/* 正確與錯誤狀態優先度最高 */
-.option-btn.correct { background: #c8e6c9 !important; border-color: #4caf50 !important; color: #2e7d32 !important; }
-.option-btn.wrong { background: #ffcdd2 !important; border-color: #f44336 !important; color: #c62828 !important; }
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .option-btn:hover {
+        background: #fff5f8;
+        border-color: #ff4081;
+      }
+    }
+    .option-btn.correct { background: #c8e6c9 !important; border-color: #4caf50 !important; color: #2e7d32 !important; }
+    .option-btn.wrong { background: #ffcdd2 !important; border-color: #f44336 !important; color: #c62828 !important; }
 
     /* Google 表單輸入區樣式 */
     .form-box {
@@ -416,6 +417,20 @@
     .form-group input:focus {
       border-color: #ff4081;
       box-shadow: 0 0 8px rgba(255, 64, 129, 0.3);
+    }
+
+    /* LINE 回傳提醒框樣式 */
+    .line-return-reminder {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: #e8f5e9;
+      border: 1.5px solid #66bb6a;
+      border-radius: 10px;
+      color: #2e7d32;
+      font-size: 13.5px;
+      font-weight: bold;
+      line-height: 1.5;
+      text-align: center;
     }
 
     /* 操作按鈕 */
@@ -463,7 +478,7 @@
       max-width: 100%;
       height: auto;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .close-modal {
@@ -476,117 +491,39 @@
       background: none;
       border: none;
     }
+
     /* ========================================================
-   📱 手機端 RWD 深度響應式排版修正 (小於 680px)
-   ======================================================== */
-@media (max-width: 680px) {
-  /* 1. 外圍邊距緊湊化，釋放寶貴寬度 */
-  body {
-    padding: 10px 8px;
-  }
-
-  .container {
-    padding: 16px 12px;
-    border-radius: 20px;
-    margin: 0;
-  }
-
-  /* 2. 頂部標題與功能按鈕自適應 */
-  .header {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 12px;
-  }
-
-  .header h1 {
-    font-size: 19px;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .nav-btns {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .nav-btns button,
-  .nav-btns a {
-    font-size: 12px !important;
-    padding: 6px 12px !important;
-  }
-
-  /* 3. 階段指示進度條緊湊化 */
-  .stage-bar {
-    padding: 8px 10px;
-    gap: 6px;
-  }
-
-  .stage-step {
-    font-size: 11px;
-    padding: 4px 6px;
-  }
-
-  .game-window {
-    padding: 15px 10px;
-    min-height: 380px;
-  }
-
-  /* 4. 解決【圖 1】翻牌卡片寬度超出容器問題 */
-  .memory-grid {
-    width: 100% !important;
-    max-width: 100% !important;
-    gap: 8px !important;
-  }
-
-  .memory-card {
-    border-radius: 10px !important;
-    font-size: 12px !important;
-    padding: 4px !important;
-  }
-
-  /* 5. 解決【圖 2】連連看兩側比例不均、高度落差過大問題 */
-  .match-container {
-    gap: 10px !important;
-  }
-
-  .match-col {
-    gap: 10px !important;
-  }
-
-  .match-item {
-    padding: 10px 6px !important;
-    font-size: 13px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 60px; /* 強制設定最小高度，讓左側短字與右側長句對齊 */
-    line-height: 1.35;
-  }
-
-  /* 6. 題目字體與標籤微調 */
-  .book-tag {
-    font-size: 11px;
-    padding: 3px 8px;
-  }
-
-  .timer-badge {
-    font-size: 12px;
-    padding: 4px 12px;
-  }
-
-  .quiz-question {
-    font-size: 16px;
-    line-height: 1.4;
-  }
-
-  .option-btn {
-    padding: 10px 14px;
-    font-size: 14px;
-  }
-}
+       📱 手機端 RWD 深度響應式排版修正 (小於 680px)
+       ======================================================== */
+    @media (max-width: 680px) {
+      body { padding: 10px 8px; }
+      .container { padding: 16px 12px; border-radius: 20px; margin: 0; }
+      .header { flex-direction: column; align-items: center; gap: 12px; padding-bottom: 12px; }
+      .header h1 { font-size: 19px; text-align: center; white-space: nowrap; }
+      .nav-btns { width: 100%; justify-content: center; flex-wrap: wrap; gap: 8px; }
+      .nav-btns button, .nav-btns a { font-size: 12px !important; padding: 6px 12px !important; }
+      .stage-bar { padding: 8px 10px; gap: 6px; }
+      .stage-step { font-size: 11px; padding: 4px 6px; }
+      .game-window { padding: 15px 10px; min-height: 380px; }
+      .memory-grid { width: 100% !important; max-width: 100% !important; gap: 8px !important; }
+      .memory-card { border-radius: 10px !important; font-size: 12px !important; padding: 4px !important; }
+      .match-container { gap: 10px !important; }
+      .match-col { gap: 10px !important; }
+      .match-item {
+        padding: 10px 6px !important;
+        font-size: 13px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60px;
+        line-height: 1.35;
+      }
+      .book-tag { font-size: 11px; padding: 3px 8px; }
+      .timer-badge { font-size: 12px; padding: 4px 12px; }
+      .quiz-question { font-size: 16px; line-height: 1.4; }
+      .option-btn { padding: 10px 14px; font-size: 14px; }
+      .action-btn { padding: 10px 20px; font-size: 14px; }
+    }
   </style>
 </head>
 <body>
@@ -654,15 +591,31 @@
   <div class="modal-overlay" id="cert-modal">
     <div class="modal-content">
       <button class="close-modal" onclick="closeCertModal()">×</button>
-      <h2 style="color: #ff9800; margin-bottom: 15px;">🏅 榮譽過關獎狀</h2>
+      <h2 style="color: #ff9800; margin-bottom: 12px;">🏅 榮譽過關獎狀</h2>
       
       <canvas id="cert-canvas" style="display:none;"></canvas>
-      <img id="cert-display-img" src="" alt="專屬過關獎狀" style="max-width:100%; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:15px;">
+      <img id="cert-display-img" src="" alt="專屬過關獎狀">
       
+      <!-- 手機與 LINE 用戶專屬長按提示 -->
+      <p id="cert-line-tip" style="font-size: 13px; color: #e53935; margin-bottom: 10px; font-weight: bold; line-height: 1.5;">
+        💡 手機／LINE 用戶請直接「長按上方獎狀圖片」儲存至相簿，或點擊下方按鈕放大檢視！<br>
+        <span style="color: #2e7d32;">✅ 領取獎狀後，別忘了回到 LINE 回傳「闖關完成」喔！</span>
+      </p>
+
       <div>
         <a id="cert-download-link" href="#" download="Scholastic-300L-Certificate.png" class="action-btn cert-btn" style="text-decoration:none; display:inline-block;">📥 下載專屬獎狀</a>
       </div>
     </div>
+  </div>
+
+  <!-- LINE 內建瀏覽器專用「原地放大長按存圖層」 -->
+  <div id="image-viewer-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:2500; justify-content:center; align-items:center; flex-direction:column; padding:20px;" onclick="this.style.display='none'">
+    <p style="color:#fff; font-size:16px; margin-bottom:15px; font-weight:bold; text-align:center; line-height:1.5;">
+      👇 請直接「長按下方獎狀圖片」<br>
+      選擇「儲存影像」或「加入照片」即可存入手機相簿！<br>
+      <span style="font-size:12px; color:#ccc; font-weight:normal;">（儲存完畢後，點擊黑色背景任意處即可返回）</span>
+    </p>
+    <img id="viewer-img" src="" alt="放大獎狀" style="max-width:96%; max-height:78vh; border-radius:10px; box-shadow:0 0 25px rgba(255,255,255,0.25);" onclick="event.stopPropagation();">
   </div>
 
   <script>
@@ -854,16 +807,11 @@
 
     function startTimer(onTimeoutCallback) {
       stopTimer();
-      const badgeEl = document.getElementById('game-timer');
+      timeLeft = TIME_LIMIT;
 
       if (!isTimerEnabled) {
-        if (badgeEl) badgeEl.style.display = 'none';
         return;
       }
-
-      if (badgeEl) badgeEl.style.display = 'inline-flex';
-      timeLeft = TIME_LIMIT;
-      updateTimerUI();
 
       timerInterval = setInterval(() => {
         timeLeft--;
@@ -1062,8 +1010,7 @@
 
       win.innerHTML = `
         <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-          <!-- 倒數計時徽章置於書本標籤上方 -->
-          <div class="timer-badge" id="game-timer">
+          <div class="timer-badge" id="game-timer" style="display:${isTimerEnabled ? 'inline-flex' : 'none'};">
             ⏱️ <span id="timer-sec">${timeLeft}</span> 秒
           </div>
           <span class="book-tag" style="margin-bottom:15px;">📖 ${m.book} ｜ 連連看 第 ${currentItemIdx + 1} / ${currentSession.match.length} 組</span>
@@ -1081,7 +1028,7 @@
     }
 
     function onSelectLeft(el) {
-      if (el.classList.contains('matched')) return;
+      if (el.classList.contains('matched') || el.classList.contains('error')) return;
       SoundEffect.playFlip();
       document.querySelectorAll('#col-left .match-item').forEach(i => i.classList.remove('selected'));
       el.classList.add('selected');
@@ -1090,7 +1037,7 @@
     }
 
     function onSelectRight(el) {
-      if (el.classList.contains('matched')) return;
+      if (el.classList.contains('matched') || el.classList.contains('error')) return;
       SoundEffect.playFlip();
       document.querySelectorAll('#col-right .match-item').forEach(i => i.classList.remove('selected'));
       el.classList.add('selected');
@@ -1099,55 +1046,48 @@
     }
 
     function checkMatch() {
-  if (selLeft && selRight) {
-    if (selLeft.dataset.id === selRight.dataset.id) {
-      // ✅ 配對成功：綠色外框 + 答對音效
-      SoundEffect.playCorrect();
-      selLeft.classList.remove('selected');
-      selRight.classList.remove('selected');
-      selLeft.classList.add('matched');
-      selRight.classList.add('matched');
-      
-      selLeft = null;
-      selRight = null;
+      if (selLeft && selRight) {
+        if (selLeft.dataset.id === selRight.dataset.id) {
+          SoundEffect.playCorrect();
+          selLeft.classList.remove('selected');
+          selRight.classList.remove('selected');
+          selLeft.classList.add('matched');
+          selRight.classList.add('matched');
+          selLeft = null;
+          selRight = null;
 
-      if (document.querySelectorAll('#col-left .match-item:not(.matched)').length === 0) {
-        score.matchDone++;
-        stopTimer();
-        setTimeout(() => {
-          currentItemIdx++;
-          if (currentItemIdx < currentSession.match.length) {
-            renderMatchQuestion();
-          } else {
-            proceedToMemoryPhase();
+          if (document.querySelectorAll('#col-left .match-item:not(.matched)').length === 0) {
+            score.matchDone++;
+            stopTimer();
+            setTimeout(() => {
+              currentItemIdx++;
+              if (currentItemIdx < currentSession.match.length) {
+                renderMatchQuestion();
+              } else {
+                proceedToMemoryPhase();
+              }
+            }, 800);
           }
-        }, 800);
+        } else {
+          SoundEffect.playWrong();
+          const wrongLeft = selLeft;
+          const wrongRight = selRight;
+          selLeft = null;
+          selRight = null;
+
+          wrongLeft.classList.remove('selected');
+          wrongRight.classList.remove('selected');
+          wrongLeft.classList.add('error');
+          wrongRight.classList.add('error');
+
+          setTimeout(() => {
+            wrongLeft.classList.remove('error');
+            wrongRight.classList.remove('error');
+          }, 500);
+        }
       }
-    } else {
-      // ❌ 配對錯誤：播放答錯音效 + 閃爍紅色外框
-      SoundEffect.playWrong();
-      
-      const wrongLeft = selLeft;
-      const wrongRight = selRight;
-
-      // 暫存並清空選取指針，避免連續誤點
-      selLeft = null;
-      selRight = null;
-
-      // 加上紅色錯誤樣式
-      wrongLeft.classList.remove('selected');
-      wrongRight.classList.remove('selected');
-      wrongLeft.classList.add('error');
-      wrongRight.classList.add('error');
-
-      // 0.5 秒後移除紅色外框，恢復原本可點擊狀態
-      setTimeout(() => {
-        wrongLeft.classList.remove('error');
-        wrongRight.classList.remove('error');
-      }, 500);
     }
-  }
-}
+
     function proceedToMemoryPhase() {
       currentPhase = 'memory';
       currentItemIdx = 0;
@@ -1196,8 +1136,7 @@
 
       win.innerHTML = `
         <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-          <!-- 倒數計時徽章置於書本標籤上方 -->
-          <div class="timer-badge" id="game-timer">
+          <div class="timer-badge" id="game-timer" style="display:${isTimerEnabled ? 'inline-flex' : 'none'};">
             ⏱️ <span id="timer-sec">${timeLeft}</span> 秒
           </div>
           <span class="book-tag" style="margin-bottom:15px;">📖 ${mem.book} ｜ 對對碰 第 ${currentItemIdx + 1} / ${currentSession.memory.length} 組</span>
@@ -1264,46 +1203,47 @@
     }
 
     /* ---------------- 階段 3：單選對答 (QA) ---------------- */
-function renderQAQuestion() {
-  updateProgressBar();
-  startTimer(() => {
-    SoundEffect.playWrong();
-    currentItemIdx++;
-    if (currentItemIdx < currentSession.qa.length) {
-      renderQAQuestion();
-    } else {
-      renderFinalResults();
-    }
-  });
+    function renderQAQuestion() {
+      updateProgressBar();
+      startTimer(() => {
+        SoundEffect.playWrong();
+        currentItemIdx++;
+        if (currentItemIdx < currentSession.qa.length) {
+          renderQAQuestion();
+        } else {
+          renderFinalResults();
+        }
+      });
 
-  const win = document.getElementById('game-window');
-  const q = currentSession.qa[currentItemIdx];
+      const win = document.getElementById('game-window');
+      const q = currentSession.qa[currentItemIdx];
 
-  // 🎲 將選項進行隨機洗牌，並動態計算正確答案的新索引
-  const shuffledOptions = q.options.map((optText, origIdx) => ({
-    text: optText,
-    isCorrect: origIdx === q.answer
-  })).sort(() => Math.random() - 0.5);
+      // 隨機洗牌選項，避免正確答案總是第一個
+      const shuffledOptions = q.options.map((optText, origIdx) => ({
+        text: optText,
+        isCorrect: origIdx === q.answer
+      })).sort(() => Math.random() - 0.5);
 
-  const newCorrectIndex = shuffledOptions.findIndex(item => item.isCorrect);
+      const newCorrectIndex = shuffledOptions.findIndex(item => item.isCorrect);
 
-  win.innerHTML = `
-    <div class="quiz-box">
-      <div style="display:flex; flex-direction:column; align-items:flex-start;">
-        <div class="timer-badge" id="game-timer">
-          ⏱️ <span id="timer-sec">${timeLeft}</span> 秒
+      win.innerHTML = `
+        <div class="quiz-box">
+          <div style="display:flex; flex-direction:column; align-items:flex-start;">
+            <div class="timer-badge" id="game-timer" style="display:${isTimerEnabled ? 'inline-flex' : 'none'};">
+              ⏱️ <span id="timer-sec">${timeLeft}</span> 秒
+            </div>
+            <span class="book-tag">📖 ${q.book} ｜ 對答 第 ${currentItemIdx + 1} / ${currentSession.qa.length} 題</span>
+          </div>
+          <div class="quiz-question">${q.question}</div>
+          <div class="options-grid">
+            ${shuffledOptions.map((opt, i) => `
+              <button class="option-btn" onclick="submitQAAnswer(this, ${i}, ${newCorrectIndex})">${opt.text}</button>
+            `).join('')}
+          </div>
         </div>
-        <span class="book-tag">📖 ${q.book} ｜ 對答 第 ${currentItemIdx + 1} / ${currentSession.qa.length} 題</span>
-      </div>
-      <div class="quiz-question">${q.question}</div>
-      <div class="options-grid">
-        ${shuffledOptions.map((opt, i) => `
-          <button class="option-btn" onclick="submitQAAnswer(this, ${i}, ${newCorrectIndex})">${opt.text}</button>
-        `).join('')}
-      </div>
-    </div>
-  `;
-}
+      `;
+    }
+
     function submitQAAnswer(btn, chosen, correct) {
       btn.blur();
       stopTimer();
@@ -1417,6 +1357,11 @@ function renderQAQuestion() {
               📤 送出成績登記
             </button>
             <p id="form-msg" style="margin-top:10px; font-weight:bold; font-size:14px; display:none;"></p>
+            
+            <!-- 新增：記得 LINE 回傳闖關完成的提示 -->
+            <div class="line-return-reminder">
+              💬 溫馨提醒：送出成績與領取獎狀後，請記得回到 LINE 回傳「闖關完成」喔！
+            </div>
           </div>
 
           <!-- 底部功能按鈕 -->
@@ -1439,7 +1384,7 @@ function renderQAQuestion() {
     /* 送出成績到 Google 表單 */
     function submitToGoogleForm(scoreVal) {
       if (isFormSubmitted) {
-        alert('您已經送出過成績囉！');
+        alert('您已經送出過成績囉！請記得回到 LINE 回傳「闖關完成」喔！');
         return;
       }
 
@@ -1473,7 +1418,7 @@ function renderQAQuestion() {
         submitBtn.innerText = '✅ 成績已送出';
         msg.style.display = 'block';
         msg.style.color = '#2e7d32';
-        msg.innerText = '🎉 成績已成功回傳至系統！';
+        msg.innerText = '🎉 成績已成功回傳至系統！請記得回到 LINE 回傳「闖關完成」訊息喔！';
       })
       .catch(err => {
         submitBtn.disabled = false;
@@ -1520,8 +1465,24 @@ function renderQAQuestion() {
         document.getElementById('cert-display-img').src = finalImageURL;
         
         const downloadBtn = document.getElementById('cert-download-link');
-        downloadBtn.href = finalImageURL;
-        downloadBtn.download = `${studentName}_300L_闖關獎狀.png`;
+        const isLineOrInApp = /Line|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+
+        if (isLineOrInApp) {
+          downloadBtn.removeAttribute('download');
+          downloadBtn.href = 'javascript:void(0);';
+          downloadBtn.innerText = '🔍 點擊放大獎狀（長按圖片存檔）';
+          downloadBtn.onclick = function(e) {
+            e.preventDefault();
+            SoundEffect.playFlip();
+            document.getElementById('viewer-img').src = finalImageURL;
+            document.getElementById('image-viewer-modal').style.display = 'flex';
+          };
+        } else {
+          downloadBtn.innerText = '📥 下載專屬獎狀';
+          downloadBtn.setAttribute('download', `${studentName}_300L_闖關獎狀.png`);
+          downloadBtn.href = finalImageURL;
+          downloadBtn.onclick = null;
+        }
 
         document.getElementById('cert-modal').style.display = 'flex';
       };
