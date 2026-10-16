@@ -424,11 +424,11 @@
     /* LINE 回傳提醒框樣式 */
     .line-return-reminder {
       margin-top: 14px;
-      padding: 10px 14px;
-      background: #e8f5e9;
-      border: 1.5px solid #66bb6a;
+      padding: 12px 14px;
+      background: #fff3e0;
+      border: 1.5px solid #ffb74d;
       border-radius: 10px;
-      color: #2e7d32;
+      color: #e65100;
       font-size: 13.5px;
       font-weight: bold;
       line-height: 1.5;
@@ -601,7 +601,7 @@
       <!-- 手機與 LINE 用戶專屬長按提示 -->
       <p id="cert-line-tip" style="font-size: 13px; color: #e53935; margin-bottom: 10px; font-weight: bold; line-height: 1.5;">
         💡 手機／LINE 用戶請直接「長按上方獎狀圖片」儲存至相簿，或點擊下方按鈕放大檢視！<br>
-        <span style="color: #2e7d32;">✅ 領取獎狀後，別忘了回到 LINE 回傳「闖關完成」喔！</span>
+        <span style="color: #2e7d32;">✅ 記得三個樂園（300L/500L/700L）都完成後，再統一回傳 LINE 喔！</span>
       </p>
 
       <div>
@@ -1319,6 +1319,9 @@
       if (isPassed) {
         triggerConfetti();
         SoundEffect.playVictory();
+        setTimeout(() => {
+          alert("🎉 恭喜通關！\n\n📌 溫馨提醒：記得【300L、500L、700L】三個樂園都要闖關成功，再統一回傳 LINE 喔！");
+        }, 400);
       }
 
       win.innerHTML = `
@@ -1341,35 +1344,34 @@
             </p>
           </div>
 
-          <!-- 回傳 Google 表單輸入區 -->
+          <!-- 回傳 Google 表單輸入區（標註必填） -->
           <div class="form-box">
-            <h3 style="color:#7b1fa2; font-size:17px; margin-bottom:12px;">📝 登記闖關成績</h3>
+            <h3 style="color:#7b1fa2; font-size:17px; margin-bottom:12px;">📝 登記闖關成績（必填）</h3>
             <div class="form-group">
-              <label for="user-name">答題者本名：</label>
-              <input type="text" id="user-name" placeholder="請輸入姓名" />
+              <label for="user-name">答題者本名 <span style="color:#e53935;">*(必填)</span>：</label>
+              <input type="text" id="user-name" placeholder="請輸入姓名" required />
             </div>
             <div class="form-group">
               <label for="user-line" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-                <span>LINE 名稱：</span>
-                <span style="color: #e53935; font-size: 12px; font-weight: normal;">*請務必填寫真實 LINE 名稱，以便後續聯絡寄送獎品</span>
+                <span>LINE 名稱 <span style="color:#e53935;">*(必填)</span>：</span>
+                <span style="color: #e53935; font-size: 12px; font-weight: normal;">*請務必填寫真實 LINE 名稱或 ID</span>
               </label>
-              <input type="text" id="user-line" placeholder="請輸入 LINE 暱稱" />
+              <input type="text" id="user-line" placeholder="請輸入 LINE 暱稱或 ID" required />
             </div>
             <button class="action-btn submit-form-btn" id="btn-submit-score" onclick="submitToGoogleForm(${totalScore})">
-              📤 送出成績登記
+              📤 送出成績登記（解鎖獎狀）
             </button>
             <p id="form-msg" style="margin-top:10px; font-weight:bold; font-size:14px; display:none;"></p>
             
-            <!-- 新增：記得 LINE 回傳闖關完成的提示 -->
             <div class="line-return-reminder">
-              💬 溫馨提醒：送出成績與領取獎狀後，請記得回到 LINE 回傳「闖關完成」喔！
+              📢 提醒：記得【300L、500L、700L】三個樂園都要闖關成功，再統一回傳 LINE 喔！
             </div>
           </div>
 
-          <!-- 底部功能按鈕 -->
+          <!-- 底部功能按鈕（未送出前鎖定獎狀） -->
           <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
             ${isPassed ? `
-              <button class="action-btn cert-btn" onclick="openCertModal()">🏅 領取獎狀</button>
+              <button class="action-btn cert-btn" id="btn-open-cert" onclick="handleCertClick()" style="background:#b0bec5; cursor:not-allowed;" title="請先送出成績登記">🔒 領取獎狀 (請先送出成績)</button>
               <button class="action-btn" onclick="startNewGameSession()">🔄 再玩一輪</button>
               <button class="action-btn" style="background:#7b1fa2;" onclick="goToSelectionScreen()">📚 挑選其他讀本</button>
               <a href="index.html" class="action-btn" style="background:#8e24aa; text-decoration:none; display:inline-flex; align-items:center;">⬅ 返回大地圖</a>
@@ -1383,10 +1385,21 @@
       `;
     }
 
+    /* 攔截尚未送出表單的點擊行為 */
+    function handleCertClick() {
+      if (!isFormSubmitted) {
+        alert("⚠️ 請先在上方填寫姓名與 LINE 名稱，並點擊「📤 送出成績登記」後，才能領取專屬獎狀喔！");
+        const nameInput = document.getElementById('user-name');
+        if (nameInput) nameInput.focus();
+        return;
+      }
+      openCertModal();
+    }
+
     /* 送出成績到 Google 表單 */
     function submitToGoogleForm(scoreVal) {
       if (isFormSubmitted) {
-        alert('您已經送出過成績囉！請記得回到 LINE 回傳「闖關完成」喔！');
+        alert('您已經送出過成績囉！請記得三個樂園（300L/500L/700L）都完成後再統一回傳 LINE！');
         return;
       }
 
@@ -1397,7 +1410,9 @@
       const submitBtn = document.getElementById('btn-submit-score');
 
       if (!name || !line) {
-        alert('請填寫「本名」與「LINE 名稱」後再送出！');
+        alert('⚠️ 「答題者本名」與「LINE 名稱」皆為必填項目，請填寫完整後再送出！');
+        if (!name) document.getElementById('user-name').focus();
+        else document.getElementById('user-line').focus();
         return;
       }
 
@@ -1417,17 +1432,25 @@
       .then(() => {
         isFormSubmitted = true;
         submitBtn.style.background = '#888';
-        submitBtn.innerText = '✅ 成績已送出';
+        submitBtn.innerText = '✅ 成績已成功登記';
         msg.style.display = 'block';
         msg.style.color = '#7b1fa2';
-        msg.innerText = '🎉 成績已成功回傳至系統！請記得回到 LINE 回傳「闖關完成」訊息喔！';
+        msg.innerText = '🎉 成績登記成功！獎狀已解鎖，請點擊下方按鈕領取獎狀！';
+
+        // 🔓 解鎖獎狀按鈕
+        const certBtn = document.getElementById('btn-open-cert');
+        if (certBtn) {
+          certBtn.style.background = '#ff9800';
+          certBtn.style.cursor = 'pointer';
+          certBtn.innerText = '🏅 領取專屬獎狀';
+        }
       })
       .catch(err => {
         submitBtn.disabled = false;
-        submitBtn.innerText = '📤 送出成績登記';
+        submitBtn.innerText = '📤 送出成績登記（解鎖獎狀）';
         msg.style.display = 'block';
         msg.style.color = '#d32f2f';
-        msg.innerText = '⚠️ 傳送失敗，請稍後再試。';
+        msg.innerText = '⚠️ 傳送失敗，請確認網路後再試一次。';
       });
     }
 
